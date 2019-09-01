@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication(scanBasePackages = {"com.stylefeng.guns"})
 @EnableAsync
+// 集成dubbo并开启
 @EnableDubboConfiguration
 @EnableHystrixDashboard
 @EnableCircuitBreaker

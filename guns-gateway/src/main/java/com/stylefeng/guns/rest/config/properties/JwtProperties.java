@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = JwtProperties.JWT_PREFIX)
 public class JwtProperties {
-
+    /**
+     * jwt开头的配置会读进来，在yml配置文件里面
+     */
     public static final String JWT_PREFIX = "jwt";
 
     private String header = "Authorization";

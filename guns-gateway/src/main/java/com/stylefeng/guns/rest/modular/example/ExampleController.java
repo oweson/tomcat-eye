@@ -19,7 +19,6 @@ public class ExampleController {
 
     @RequestMapping("")
     public ResponseEntity hello() {
-        //System.out.println(simpleObject.getUser());
 
         System.out.println(CurrentUser.getCurrentUser());
 

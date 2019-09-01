@@ -37,6 +37,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // 匹配的上就跳过，否则验证
         if (request.getServletPath().equals("/" + jwtProperties.getAuthPath())) {
             chain.doFilter(request, response);
             return;
@@ -45,8 +46,9 @@ public class AuthFilter extends OncePerRequestFilter {
         // 配置忽略列表
         String ignoreUrl = jwtProperties.getIgnoreUrl();
         String[] ignoreUrls = ignoreUrl.split(",");
-        for(int i=0;i<ignoreUrls.length;i++){
-            if(request.getServletPath().startsWith(ignoreUrls[i])){
+        for (int i = 0; i < ignoreUrls.length; i++) {
+            // 请求路径，匹配的上就忽略，匹配不上就验证下面的东西！！！
+            if (request.getServletPath().startsWith(ignoreUrls[i])) {
                 chain.doFilter(request, response);
                 return;
             }
@@ -59,7 +61,7 @@ public class AuthFilter extends OncePerRequestFilter {
             authToken = requestHeader.substring(7);
             // 通过Token获取userID，并且将之存入Threadlocal，以便后续业务调用
             String userId = jwtTokenUtil.getUsernameFromToken(authToken);
-            if(userId == null){
+            if (userId == null) {
                 return;
             } else {
                 CurrentUser.saveUserId(userId);

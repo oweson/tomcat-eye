@@ -8,6 +8,7 @@ jwt:
   expiration: 604800      #7天 单位:秒
   auth-path: auth         #认证请求的路径
   md5-key: randomKey      #md5加密混淆key
+# 忽略列表，
   ignore-url: /user/register,/user/check,/film/getIndex,/film/getConditionList,/film/getFilms,/film/films,/cinema/getCinemas,/cinema/getCondition,/cinema/getFields,/cinema/getFieldInfo #忽略列表
 
 server:
@@ -32,11 +33,12 @@ spring:
     name: meeting-gateway
   dubbo:
     server: true
+## 注册中心zk,zk也要首先启动
     registry: zookeeper://localhost:2181
   datasource:
       url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
-      password:
+      password: root
       filters: log4j,wall,mergeStat
 
 logging:

@@ -2,15 +2,28 @@ package com.stylefeng.guns.rest.common;
 
 public class CurrentUser {
 
-    // 线程绑定的存储空间
+    /**
+     * 1 线程绑定的存储空间
+     */
     private static final InheritableThreadLocal<String> threadLocal = new InheritableThreadLocal<>();
-    public static void saveUserId(String userId){
+
+    /**
+     * 2 存储信息
+     */
+    public static void saveUserId(String userId) {
         threadLocal.set(userId);
     }
-    public static String getCurrentUser(){
+
+    /**
+     * 3 取出信息
+     */
+    public static String getCurrentUser() {
         return threadLocal.get();
     }
-     // 将用户信息放入存储空间
+    /**clear方法用处不大，手动清除还是自动的清除，把threadlocal当成session使用！存储id最多8位，轻量级*/
+
+    // 下面的太重量级
+    // 将用户信息放入存储空间
 //    public static void saveUserInfo(UserInfoModel userInfoModel){
 //        threadLocal.set(userInfoModel);
 //    }

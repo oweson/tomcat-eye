@@ -4,22 +4,27 @@ import lombok.Data;
 
 @Data
 public class ResponseVO<M> {
-    // 返回状态【0-成功，1-业务失败，999-表示系统异常】
+    // 1 返回状态【0-成功，1-业务失败，999-表示系统异常】
     private int status;
-    // 返回信息
+    // 2 返回信息
     private String msg;
-    // 返回数据实体;
+    // 3 返回数据实体;
     private M data;
-    // 图片前缀
+    // 4 图片前缀
     private String imgPre;
 
-    // 分页使用
+    // 5 分页使用
     private int nowPage;
     private int totalPage;
 
-    private ResponseVO(){}
+    // 不允许外部创建！
+    private ResponseVO() {
+    }
 
-    public static<M> ResponseVO success(int nowPage,int totalPage,String imgPre,M m){
+    /**
+     * 1 成功，分页
+     */
+    public static <M> ResponseVO success(int nowPage, int totalPage, String imgPre, M m) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(0);
         responseVO.setData(m);
@@ -30,7 +35,10 @@ public class ResponseVO<M> {
         return responseVO;
     }
 
-    public static<M> ResponseVO success(String imgPre,M m){
+    /**
+     * 2 成功，不分页
+     */
+    public static <M> ResponseVO success(String imgPre, M m) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(0);
         responseVO.setData(m);
@@ -39,7 +47,7 @@ public class ResponseVO<M> {
         return responseVO;
     }
 
-    public static<M> ResponseVO success(M m){
+    public static <M> ResponseVO success(M m) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(0);
         responseVO.setData(m);
@@ -47,7 +55,7 @@ public class ResponseVO<M> {
         return responseVO;
     }
 
-    public static<M> ResponseVO success(String msg){
+    public static <M> ResponseVO success(String msg) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(0);
         responseVO.setMsg(msg);
@@ -55,7 +63,10 @@ public class ResponseVO<M> {
         return responseVO;
     }
 
-    public static<M> ResponseVO serviceFail(String msg){
+    /**
+     * 服务异常，try catch里面的东西
+     */
+    public static <M> ResponseVO serviceFail(String msg) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(1);
         responseVO.setMsg(msg);
@@ -63,7 +74,10 @@ public class ResponseVO<M> {
         return responseVO;
     }
 
-    public static<M> ResponseVO appFail(String msg){
+    /**
+     * 系统异常
+     */
+    public static <M> ResponseVO appFail(String msg) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setStatus(999);
         responseVO.setMsg(msg);

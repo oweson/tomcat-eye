@@ -22,6 +22,8 @@ import java.io.IOException;
 /**
  * 对客户端请求的jwt token验证过滤器
  *
+ * 作用：要不要验证jwt,第二：jwt是否有效！！！
+ *
  * @author fengshuonan
  * @Date 2017/8/24 14:04
  */
@@ -58,10 +60,12 @@ public class AuthFilter extends OncePerRequestFilter {
         final String requestHeader = request.getHeader(jwtProperties.getHeader());
         String authToken = null;
         if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
+            // 从第七位开启截取jwt字符串
             authToken = requestHeader.substring(7);
             // 通过Token获取userID，并且将之存入Threadlocal，以便后续业务调用
             String userId = jwtTokenUtil.getUsernameFromToken(authToken);
             if (userId == null) {
+                // token不是签发的token,失败
                 return;
             } else {
                 CurrentUser.saveUserId(userId);

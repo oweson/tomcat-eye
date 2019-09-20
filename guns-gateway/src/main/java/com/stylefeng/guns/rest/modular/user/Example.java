@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 // dubbo的service注解，把服务暴露出去
-@Service(interfaceClass = Example.class)
+//@Service(interfaceClass = Example.class)
 public class Example {
 }

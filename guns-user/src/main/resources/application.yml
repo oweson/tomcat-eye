@@ -32,13 +32,13 @@ spring:
     name: meeting-user
   dubbo:
     server: true
-    registry: zookeeper://localhost:2181
-    // 协议，dubbo
+    registry: zookeeper://127.0.0.1:2181
+    # 协议，dubbo，rmi,hessian
     protocol:
       name: dubbo
       port: 20881
   datasource:
-      url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://127.0.0.1:3306/guns?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
       password: root
       filters: log4j,wall,mergeStat

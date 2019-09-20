@@ -118,10 +118,12 @@ public class UserServiceImpl implements UserAPI {
      */
     @Override
     public UserInfoModel updateUserInfo(UserInfoModel userInfoModel) {
+        // NPE 校验 todo
         // 1 将传入的参数转换为DO 【MoocUserT】
         MoocUserT moocUserT = new MoocUserT();
         moocUserT.setUuid(userInfoModel.getUuid());
         moocUserT.setNickName(userInfoModel.getNickname());
+        // 必填
         moocUserT.setLifeState(Integer.parseInt(userInfoModel.getLifeState()));
         moocUserT.setBirthday(userInfoModel.getBirthday());
         moocUserT.setBiography(userInfoModel.getBiography());

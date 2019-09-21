@@ -22,34 +22,33 @@ public class FilmController {
 
     private static final String img_pre = "http://img.meetingshop.cn/";
 
-    @Reference(interfaceClass = FilmServiceApi.class,check = false)
+    @Reference(interfaceClass = FilmServiceApi.class, check = false)
     private FilmServiceApi filmServiceApi;
 
-    @Reference(interfaceClass = FilmAsyncServiceApi.class,async = true,check = false)
+    @Reference(interfaceClass = FilmAsyncServiceApi.class, async = true, check = false)
     private FilmAsyncServiceApi filmAsyncServiceApi;
 
-    // 获取首页信息接口
-    /*
-        API网关：
-            1、功能聚合【API聚合】
-            好处：
-                1、六个接口，一次请求，同一时刻节省了五次HTTP请求
-                2、同一个接口对外暴漏，降低了前后端分离开发的难度和复杂度
-            坏处：
-                1、一次获取数据过多，容易出现问题
+    // 1 获取首页信息接口
+
+    /**
+     * API网关：
+     * 1、功能聚合【API聚合】
+     * 好处：
+     * 1、六个接口，一次请求，同一时刻节省了五次HTTP请求
+     * 2、同一个接口对外暴漏，降低了前后端分离开发的难度和复杂度
+     * 坏处：
+     * 1、一次获取数据过多，容易出现问题
+     * 总体利大于弊
      */
-    @RequestMapping(value = "getIndex",method = RequestMethod.GET)
-    public ResponseVO<FilmIndexVO> getIndex(){
-        // 测试Lombok
-//        BannerVO bannerVO = new BannerVO();
-//        bannerVO.setBannerAddress("");
+    @RequestMapping(value = "getIndex", method = RequestMethod.GET)
+    public ResponseVO<FilmIndexVO> getIndex() {
         FilmIndexVO filmIndexVO = new FilmIndexVO();
         // 获取banner信息
         filmIndexVO.setBanners(filmServiceApi.getBanners());
         // 获取正在热映的电影
-        filmIndexVO.setHotFilms(filmServiceApi.getHotFilms(true,8,1,1,99,99,99));
+        filmIndexVO.setHotFilms(filmServiceApi.getHotFilms(true, 8, 1, 1, 99, 99, 99));
         // 即将上映的电影
-        filmIndexVO.setSoonFilms(filmServiceApi.getSoonFilms(true,8,1,1,99,99,99));
+        filmIndexVO.setSoonFilms(filmServiceApi.getSoonFilms(true, 8, 1, 1, 99, 99, 99));
         // 票房排行榜
         filmIndexVO.setBoxRanking(filmServiceApi.getBoxRanking());
         // 获取受欢迎的榜单
@@ -61,10 +60,10 @@ public class FilmController {
     }
 
 
-    @RequestMapping(value = "getConditionList",method = RequestMethod.GET)
-    public ResponseVO getConditionList(@RequestParam(name = "catId",required = false,defaultValue = "99")String catId,
-                                       @RequestParam(name = "sourceId",required = false,defaultValue = "99")String sourceId,
-                                       @RequestParam(name = "yearId",required = false,defaultValue = "99")String yearId){
+    @RequestMapping(value = "getConditionList", method = RequestMethod.GET)
+    public ResponseVO getConditionList(@RequestParam(name = "catId", required = false, defaultValue = "99") String catId,
+                                       @RequestParam(name = "sourceId", required = false, defaultValue = "99") String sourceId,
+                                       @RequestParam(name = "yearId", required = false, defaultValue = "99") String yearId) {
 
         FilmConditionVO filmConditionVO = new FilmConditionVO();
 
@@ -74,7 +73,7 @@ public class FilmController {
         List<CatVO> cats = filmServiceApi.getCats();
         List<CatVO> catResult = new ArrayList<>();
         CatVO cat = null;
-        for(CatVO catVO : cats){
+        for (CatVO catVO : cats) {
             // 判断集合是否存在catId，如果存在，则将对应的实体变成active状态
             // 6
             // 1,2,3,99,4,5 ->
@@ -83,78 +82,78 @@ public class FilmController {
                     1、数据层查询按Id进行排序【有序集合 -> 有序数组】
                     2、通过二分法查找
              */
-            if(catVO.getCatId().equals("99")){
+            if (catVO.getCatId().equals("99")) {
                 cat = catVO;
                 continue;
             }
-            if(catVO.getCatId().equals(catId)){
+            if (catVO.getCatId().equals(catId)) {
                 flag = true;
                 catVO.setActive(true);
-            }else{
+            } else {
                 catVO.setActive(false);
             }
             catResult.add(catVO);
         }
         // 如果不存在，则默认将全部变为Active状态
-        if(!flag){
+        if (!flag) {
             cat.setActive(true);
             catResult.add(cat);
-        }else{
+        } else {
             cat.setActive(false);
             catResult.add(cat);
         }
 
 
         // 片源集合
-        flag=false;
+        flag = false;
         List<SourceVO> sources = filmServiceApi.getSources();
         List<SourceVO> sourceResult = new ArrayList<>();
         SourceVO sourceVO = null;
-        for(SourceVO source : sources){
-            if(source.getSourceId().equals("99")){
+        for (SourceVO source : sources) {
+            if (source.getSourceId().equals("99")) {
                 sourceVO = source;
                 continue;
             }
-            if(source.getSourceId().equals(catId)){
+            if (source.getSourceId().equals(catId)) {
                 flag = true;
                 source.setActive(true);
-            }else{
+            } else {
                 source.setActive(false);
             }
             sourceResult.add(source);
         }
         // 如果不存在，则默认将全部变为Active状态
-        if(!flag){
+        if (!flag) {
             sourceVO.setActive(true);
             sourceResult.add(sourceVO);
-        }else{
+        } else {
             sourceVO.setActive(false);
             sourceResult.add(sourceVO);
         }
 
         // 年代集合
-        flag=false;
+        flag = false;
         List<YearVO> years = filmServiceApi.getYears();
         List<YearVO> yearResult = new ArrayList<>();
         YearVO yearVO = null;
-        for(YearVO year : years){
-            if(year.getYearId().equals("99")){
+        for (YearVO year : years) {
+            if (year.getYearId().equals("99")) {
                 yearVO = year;
                 continue;
             }
-            if(year.getYearId().equals(catId)){
+            if (year.getYearId().equals(catId)) {
                 flag = true;
                 year.setActive(true);
-            }else{
+            } else {
                 year.setActive(false);
             }
             yearResult.add(year);
         }
         // 如果不存在，则默认将全部变为Active状态
-        if(!flag){
+        if (!flag) {
             yearVO.setActive(true);
             yearResult.add(yearVO);
-        }else{
+        } else {
             yearVO.setActive(false);
             yearResult.add(yearVO);
         }
@@ -167,36 +166,36 @@ public class FilmController {
     }
 
 
-    @RequestMapping(value = "getFilms",method = RequestMethod.GET)
-    public ResponseVO getFilms(FilmRequestVO filmRequestVO){
+    @RequestMapping(value = "getFilms", method = RequestMethod.GET)
+    public ResponseVO getFilms(FilmRequestVO filmRequestVO) {
 
         String img_pre = "http://img.meetingshop.cn/";
 
         FilmVO filmVO = null;
         // 根据showType判断影片查询类型
-        switch (filmRequestVO.getShowType()){
-            case 1 :
+        switch (filmRequestVO.getShowType()) {
+            case 1:
                 filmVO = filmServiceApi.getHotFilms(
-                        false,filmRequestVO.getPageSize(),filmRequestVO.getNowPage(),
-                        filmRequestVO.getSortId(),filmRequestVO.getSourceId(),filmRequestVO.getYearId(),
+                        false, filmRequestVO.getPageSize(), filmRequestVO.getNowPage(),
+                        filmRequestVO.getSortId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
                         filmRequestVO.getCatId());
                 break;
-            case 2 :
+            case 2:
                 filmVO = filmServiceApi.getSoonFilms(
-                        false,filmRequestVO.getPageSize(),filmRequestVO.getNowPage(),
-                        filmRequestVO.getSortId(),filmRequestVO.getSourceId(),filmRequestVO.getYearId(),
+                        false, filmRequestVO.getPageSize(), filmRequestVO.getNowPage(),
+                        filmRequestVO.getSortId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
                         filmRequestVO.getCatId());
                 break;
-            case 3 :
+            case 3:
                 filmVO = filmServiceApi.getClassicFilms(
-                        filmRequestVO.getPageSize(),filmRequestVO.getNowPage(),
-                        filmRequestVO.getSortId(),filmRequestVO.getSourceId(),
+                        filmRequestVO.getPageSize(), filmRequestVO.getNowPage(),
+                        filmRequestVO.getSortId(), filmRequestVO.getSourceId(),
                         filmRequestVO.getYearId(), filmRequestVO.getCatId());
                 break;
             default:
                 filmVO = filmServiceApi.getHotFilms(
-                        false,filmRequestVO.getPageSize(),filmRequestVO.getNowPage(),
-                        filmRequestVO.getSortId(),filmRequestVO.getSourceId(),filmRequestVO.getYearId(),
+                        false, filmRequestVO.getPageSize(), filmRequestVO.getNowPage(),
+                        filmRequestVO.getSortId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
                         filmRequestVO.getCatId());
                 break;
         }
@@ -205,21 +204,21 @@ public class FilmController {
         // 判断当前是第几页
 
         return ResponseVO.success(
-                            filmVO.getNowPage(),filmVO.getTotalPage(),
-                            img_pre,filmVO.getFilmInfo());
+                filmVO.getNowPage(), filmVO.getTotalPage(),
+                img_pre, filmVO.getFilmInfo());
     }
 
 
-    @RequestMapping(value = "films/{searchParam}",method = RequestMethod.GET)
-    public ResponseVO films(@PathVariable("searchParam")String searchParam,
-                             int searchType) throws ExecutionException, InterruptedException {
+    @RequestMapping(value = "films/{searchParam}", method = RequestMethod.GET)
+    public ResponseVO films(@PathVariable("searchParam") String searchParam,
+                            int searchType) throws ExecutionException, InterruptedException {
 
         // 根据searchType，判断查询类型
         FilmDetailVO filmDetail = filmServiceApi.getFilmDetail(searchType, searchParam);
 
-        if(filmDetail==null){
+        if (filmDetail == null) {
             return ResponseVO.serviceFail("没有可查询的影片");
-        }else if(filmDetail.getFilmId()==null || filmDetail.getFilmId().trim().length()==0){
+        } else if (filmDetail.getFilmId() == null || filmDetail.getFilmId().trim().length() == 0) {
             return ResponseVO.serviceFail("没有可查询的影片");
         }
 
@@ -256,7 +255,7 @@ public class FilmController {
         // 组织成返回值
         filmDetail.setInfo04(infoRequstVO);
 
-        return ResponseVO.success("http://img.meetingshop.cn/",filmDetail);
+        return ResponseVO.success("http://img.meetingshop.cn/", filmDetail);
     }
 
 }

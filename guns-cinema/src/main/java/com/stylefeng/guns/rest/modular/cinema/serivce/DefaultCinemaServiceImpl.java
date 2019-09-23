@@ -122,20 +122,20 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
     public List<AreaVO> getAreas(int areaId) {
         boolean flag = false;
         List<AreaVO> areaVOS = new ArrayList<>();
-        // 判断brandId是否存在
+        // 1 判断brandId是否存在
         MoocAreaDictT moocAreaDictT = moocAreaDictTMapper.selectById(areaId);
-        // 判断brandId 是否等于 99
+        // 2 判断brandId 是否等于 99
         if (areaId == 99 || moocAreaDictT == null || moocAreaDictT.getUuid() == null) {
             flag = true;
         }
-        // 查询所有列表
+        // 3 查询所有列表
         List<MoocAreaDictT> moocAreaDictTS = moocAreaDictTMapper.selectList(null);
-        // 判断flag如果为true，则将99置为isActive
+        // 4 判断flag如果为true，则将99置为isActive
         for (MoocAreaDictT area : moocAreaDictTS) {
             AreaVO areaVO = new AreaVO();
             areaVO.setAreaName(area.getShowName());
             areaVO.setAreaId(area.getUuid() + "");
-            // 如果flag为true，则需要99，如为false，则匹配上的内容为active
+            // 5 如果flag为true，则需要99，如为false，则匹配上的内容为active
             if (flag) {
                 if (area.getUuid() == 99) {
                     areaVO.setActive(true);

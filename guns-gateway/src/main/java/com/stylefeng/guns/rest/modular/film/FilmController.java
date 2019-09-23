@@ -42,18 +42,21 @@ public class FilmController {
      */
     @RequestMapping(value = "getIndex", method = RequestMethod.GET)
     public ResponseVO<FilmIndexVO> getIndex() {
+        /*gateway:专门与业务和web做交互的；
+        * 仅仅是中转！！！
+        * api设计：hot和soon有个数据标识在数据层才知道，表现层不知道，所以两个接口，设计的多就是少*/
         FilmIndexVO filmIndexVO = new FilmIndexVO();
-        // 获取banner信息
+        // 1 获取banner信息
         filmIndexVO.setBanners(filmServiceApi.getBanners());
-        // 获取正在热映的电影
+        // 2 获取正在热映的电影
         filmIndexVO.setHotFilms(filmServiceApi.getHotFilms(true, 8, 1, 1, 99, 99, 99));
-        // 即将上映的电影
+        // 3 即将上映的电影
         filmIndexVO.setSoonFilms(filmServiceApi.getSoonFilms(true, 8, 1, 1, 99, 99, 99));
-        // 票房排行榜
+        // 4 票房排行榜
         filmIndexVO.setBoxRanking(filmServiceApi.getBoxRanking());
-        // 获取受欢迎的榜单
+        // 5 获取受欢迎的榜单
         filmIndexVO.setExpectRanking(filmServiceApi.getExpectRanking());
-        // 获取前一百
+        // 6 获取前一百
         filmIndexVO.setTop100(filmServiceApi.getTop());
 
         return ResponseVO.success(filmIndexVO);
@@ -67,9 +70,9 @@ public class FilmController {
 
         FilmConditionVO filmConditionVO = new FilmConditionVO();
 
-        // 标识位
+        // 1 标识位
         boolean flag = false;
-        // 类型集合
+        // 2 类型集合
         List<CatVO> cats = filmServiceApi.getCats();
         List<CatVO> catResult = new ArrayList<>();
         CatVO cat = null;
@@ -207,7 +210,7 @@ public class FilmController {
                 filmVO.getNowPage(), filmVO.getTotalPage(),
                 img_pre, filmVO.getFilmInfo());
     }
-
+/** 4 电影搜索*/
 
     @RequestMapping(value = "films/{searchParam}", method = RequestMethod.GET)
     public ResponseVO films(@PathVariable("searchParam") String searchParam,

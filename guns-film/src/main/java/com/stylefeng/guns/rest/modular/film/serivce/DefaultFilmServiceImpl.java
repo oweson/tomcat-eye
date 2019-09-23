@@ -39,6 +39,9 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Autowired
     private MoocActorTMapper moocActorTMapper;
 
+    /**
+     * 1 首页轮播图
+     */
     @Override
     public List<BannerVO> getBanners() {
         List<BannerVO> result = new ArrayList<>();
@@ -79,6 +82,9 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         return filmInfos;
     }
 
+    /**
+     * 2 热门影片
+     */
     @Override
     public FilmVO getHotFilms(boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId) {
         FilmVO filmVO = new FilmVO();
@@ -150,7 +156,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     }
 
     /**
-     * 即将上映的条件是2，和热映影片很类似
+     * 3 即将上映的条件是2，和热映影片很类似
      */
     @Override
     public FilmVO getSoonFilms(boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId) {
@@ -220,6 +226,9 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         return filmVO;
     }
 
+    /**
+     * 4 经典影片
+     */
     @Override
     public FilmVO getClassicFilms(int nums, int nowPage, int sortId, int sourceId, int yearId, int catId) {
         FilmVO filmVO = new FilmVO();
@@ -278,7 +287,9 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         return filmVO;
     }
 
-
+    /**
+     * 5 正在上映的票房前10
+     */
     @Override
     public List<FilmInfo> getBoxRanking() {
         // 条件 -> 正在上映的，票房前10名
@@ -295,7 +306,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     }
 
     /**
-     * 预售前10名
+     * 6 预售前10名
      */
     @Override
     public List<FilmInfo> getExpectRanking() {
@@ -314,7 +325,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     }
 
     /**
-     * 正在上映的票房前10名
+     * 7 正在上映的票房前10名
      */
     @Override
     public List<FilmInfo> getTop() {

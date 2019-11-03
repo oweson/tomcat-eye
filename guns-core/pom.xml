@@ -15,7 +15,11 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>20.0</version>
+        </dependency>
         <!--通用依赖-->
         <dependency>
             <groupId>com.baomidou</groupId>

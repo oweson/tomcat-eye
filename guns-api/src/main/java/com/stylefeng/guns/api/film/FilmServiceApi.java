@@ -14,6 +14,7 @@ public interface FilmServiceApi {
     /**
      * 2  获取热映影片
      * 限制几张，
+     * isLimit:用来判断是不是首页！
      */
     FilmVO getHotFilms(boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId);
 
@@ -50,7 +51,7 @@ public interface FilmServiceApi {
     // ==== 获取影片条件接口
 
     /**
-     * 8 分类条件
+     * 8 分类条件，
      */
     List<CatVO> getCats();
 

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Component
 @Service(interfaceClass = FilmServiceApi.class)
 public class DefaultFilmServiceImpl implements FilmServiceApi {
@@ -88,11 +89,11 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public FilmVO getHotFilms(boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId) {
         FilmVO filmVO = new FilmVO();
-        List<FilmInfo> filmInfos = new ArrayList<>();
+        List<FilmInfo> filmInfos = new ArrayList<>(1024);
 
         // 1 热映影片的限制条件
         EntityWrapper<MoocFilmT> entityWrapper = new EntityWrapper<>();
-        // 热映,1
+        // 热映,电影的状态，1
         entityWrapper.eq("film_status", "1");
         // 2 判断是否是首页需要的内容
         if (isLimit) {
@@ -108,9 +109,10 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
             // 如果不是，则是列表页，同样需要限制内容为热映影片
             Page<MoocFilmT> page = null;
             // 根据sortId的不同，来组织不同的Page对象
-            // 1-按热门搜索，2-按时间搜索，3-按评价搜索
+            // 1-按热门搜索，2-按时间搜索，3-按评价搜索 todo
             switch (sortId) {
                 case 1:
+                    // 热门，根据票房排序
                     page = new Page<>(nowPage, nums, "film_box_office");
                     break;
                 case 2:
@@ -120,6 +122,8 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
                     page = new Page<>(nowPage, nums, "film_score");
                     break;
                 default:
+                    // 因为是get请求的,理论是可以修改值的！！！todo 默认值防范！
+                    // 默认是热门排行！
                     page = new Page<>(nowPage, nums, "film_box_office");
                     break;
             }
@@ -132,7 +136,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
                 entityWrapper.eq("film_date", yearId);
             }
             if (catId != 99) {
-                // #2#4#22#
+                // #2#4#22#  因为数据库存储的年代，是一块的，如果传入2有可能匹配两个，加上#就不会啦！todo
                 String catStr = "%#" + catId + "#%";
                 entityWrapper.like("film_cats", catStr);
             }
@@ -149,6 +153,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
 
             filmVO.setFilmInfo(filmInfos);
             filmVO.setTotalPage(totalPages);
+            // 当前页，传递那个就是那个
             filmVO.setNowPage(nowPage);
         }
 
@@ -163,12 +168,13 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         FilmVO filmVO = new FilmVO();
         List<FilmInfo> filmInfos = new ArrayList<>();
 
-        // 即将上映影片的限制条件
+        // 1 即将上映影片的限制条件
         EntityWrapper<MoocFilmT> entityWrapper = new EntityWrapper<>();
+        // 参数 2
         entityWrapper.eq("film_status", "2");
-        // 判断是否是首页需要的内容
+        // 2 判断是否是首页需要的内容
         if (isLimit) {
-            // 如果是，则限制条数、限制内容为热映影片
+            // 如果是，则限制条数、限制内容为热映影片，isLimit true表示是首页需要的！
             Page<MoocFilmT> page = new Page<>(1, nums);
             List<MoocFilmT> moocFilms = moocFilmTMapper.selectPage(page, entityWrapper);
             // 组织filmInfos
@@ -182,12 +188,14 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
             // 1-按热门搜索，2-按时间搜索，3-按评价搜索
             switch (sortId) {
                 case 1:
+                    // 即将上映的？没有票房，根据预售进行排序；
                     page = new Page<>(nowPage, nums, "film_preSaleNum");
                     break;
                 case 2:
                     page = new Page<>(nowPage, nums, "film_time");
                     break;
                 case 3:
+                    // 没有评价？预售的越多，评价就越好，模拟！
                     page = new Page<>(nowPage, nums, "film_preSaleNum");
                     break;
                 default:
@@ -345,20 +353,18 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public List<CatVO> getCats() {
         List<CatVO> cats = new ArrayList<>();
-        // 查询实体对象 - MoocCatDictT
+        // 1 查询实体对象 - MoocCatDictT
         List<MoocCatDictT> moocCats = moocCatDictTMapper.selectList(null);
-        // 将实体对象转换为业务对象 - CatVO
+        // 2 将实体对象转换为业务对象 - CatVO
         for (MoocCatDictT moocCatDictT : moocCats) {
             CatVO catVO = new CatVO();
             catVO.setCatId(moocCatDictT.getUuid() + "");
             catVO.setCatName(moocCatDictT.getShowName());
-
             cats.add(catVO);
         }
-
         return cats;
     }
-
+/**获得*/
     @Override
     public List<SourceVO> getSources() {
         List<SourceVO> sources = new ArrayList<>();
@@ -377,9 +383,9 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public List<YearVO> getYears() {
         List<YearVO> years = new ArrayList<>();
-        // 查询实体对象 - MoocCatDictT
+        // 1 查询实体对象 - MoocCatDictT
         List<MoocYearDictT> moocYears = moocYearDictTMapper.selectList(null);
-        // 将实体对象转换为业务对象 - CatVO
+        // 2 将实体对象转换为业务对象 - CatVO
         for (MoocYearDictT moocYearDictT : moocYears) {
             YearVO yearVO = new YearVO();
             yearVO.setYearId(moocYearDictT.getUuid() + "");
@@ -393,7 +399,7 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     @Override
     public FilmDetailVO getFilmDetail(int searchType, String searchParam) {
         FilmDetailVO filmDetailVO = null;
-        // searchType 1-按名称  2-按ID的查找
+        // searchType 1-按名称  2-按ID的查找 todo
         if (searchType == 1) {
             filmDetailVO = moocFilmTMapper.getFilmDetailByName("%" + searchParam + "%");
         } else {

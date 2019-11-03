@@ -2,6 +2,7 @@ package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.google.common.collect.Lists;
 import com.stylefeng.guns.api.user.UserAPI;
 import com.stylefeng.guns.api.user.vo.UserInfoModel;
 import com.stylefeng.guns.api.user.vo.UserModel;
@@ -16,8 +17,14 @@ import org.springframework.stereotype.Component;
 @Service(interfaceClass = UserAPI.class, loadbalance = "roundrobin")
 public class UserServiceImpl implements UserAPI {
 
+
     @Autowired
     private MoocUserTMapper moocUserTMapper;
+
+    @Override
+    public Object justTest() {
+        return Lists.newArrayList("china", "japan", "korea", "rusia");
+    }
 
     @Override
     public boolean register(UserModel userModel) {

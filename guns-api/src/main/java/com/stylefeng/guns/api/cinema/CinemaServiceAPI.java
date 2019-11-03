@@ -48,8 +48,8 @@ public interface CinemaServiceAPI {
      */
     FilmInfoVO getFilmInfoByFieldId(int fieldId);
 
-    /*
-        该部分是订单模块需要的内容
+    /**
+     * 9 该部分是订单模块需要的内容
      */
     OrderQueryVO getOrderNeeds(int fieldId);
 

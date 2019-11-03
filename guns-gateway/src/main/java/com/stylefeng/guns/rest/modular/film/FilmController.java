@@ -43,8 +43,8 @@ public class FilmController {
     @RequestMapping(value = "getIndex", method = RequestMethod.GET)
     public ResponseVO<FilmIndexVO> getIndex() {
         /*gateway:专门与业务和web做交互的；
-        * 仅仅是中转！！！
-        * api设计：hot和soon有个数据标识在数据层才知道，表现层不知道，所以两个接口，设计的多就是少*/
+         * 仅仅是中转！！！
+         * api设计：hot和soon有个数据标识在数据层才知道，表现层不知道，所以两个接口，设计的多就是少*/
         FilmIndexVO filmIndexVO = new FilmIndexVO();
         // 1 获取banner信息
         filmIndexVO.setBanners(filmServiceApi.getBanners());
@@ -62,7 +62,9 @@ public class FilmController {
         return ResponseVO.success(filmIndexVO);
     }
 
-
+    /**
+     * 2、影片条件列表查询接口  todo
+     */
     @RequestMapping(value = "getConditionList", method = RequestMethod.GET)
     public ResponseVO getConditionList(@RequestParam(name = "catId", required = false, defaultValue = "99") String catId,
                                        @RequestParam(name = "sourceId", required = false, defaultValue = "99") String sourceId,
@@ -85,10 +87,12 @@ public class FilmController {
                     1、数据层查询按Id进行排序【有序集合 -> 有序数组】
                     2、通过二分法查找
              */
+            // 表示默认值，继续找！！！
             if (catVO.getCatId().equals("99")) {
                 cat = catVO;
                 continue;
             }
+            // 选中的为激活状态！！！
             if (catVO.getCatId().equals(catId)) {
                 flag = true;
                 catVO.setActive(true);
@@ -97,7 +101,7 @@ public class FilmController {
             }
             catResult.add(catVO);
         }
-        // 如果不存在，则默认将全部变为Active状态
+        // 如果不存在，则默认将全部变为Active状态，选中状态
         if (!flag) {
             cat.setActive(true);
             catResult.add(cat);
@@ -107,7 +111,7 @@ public class FilmController {
         }
 
 
-        // 片源集合
+        // 2 片源集合
         flag = false;
         List<SourceVO> sources = filmServiceApi.getSources();
         List<SourceVO> sourceResult = new ArrayList<>();
@@ -134,7 +138,7 @@ public class FilmController {
             sourceResult.add(sourceVO);
         }
 
-        // 年代集合
+        // 3 年代集合
         flag = false;
         List<YearVO> years = filmServiceApi.getYears();
         List<YearVO> yearResult = new ArrayList<>();
@@ -160,7 +164,7 @@ public class FilmController {
             yearVO.setActive(false);
             yearResult.add(yearVO);
         }
-
+        // 封装VO显示！！！
         filmConditionVO.setCatInfo(catResult);
         filmConditionVO.setSourceInfo(sourceResult);
         filmConditionVO.setYearInfo(yearResult);
@@ -168,14 +172,16 @@ public class FilmController {
         return ResponseVO.success(filmConditionVO);
     }
 
-
+    /**
+     * 3 影片查询
+     */
     @RequestMapping(value = "getFilms", method = RequestMethod.GET)
     public ResponseVO getFilms(FilmRequestVO filmRequestVO) {
 
         String img_pre = "http://img.meetingshop.cn/";
 
         FilmVO filmVO = null;
-        // 根据showType判断影片查询类型
+        // 1 根据showType判断影片查询类型，1-正在热映，2-即将上映，3-经典影片
         switch (filmRequestVO.getShowType()) {
             case 1:
                 filmVO = filmServiceApi.getHotFilms(
@@ -202,21 +208,24 @@ public class FilmController {
                         filmRequestVO.getCatId());
                 break;
         }
-        // 根据sortId排序
-        // 添加各种条件查询
-        // 判断当前是第几页
+        // 1 根据sortId排序
+        // 2 添加各种条件查询
+        // 3 判断当前是第几页
 
         return ResponseVO.success(
                 filmVO.getNowPage(), filmVO.getTotalPage(),
                 img_pre, filmVO.getFilmInfo());
     }
-/** 4 电影搜索*/
+
+    /**
+     * 4 影片详情接口/搜索或者点击（输入框：搜索，详情是点击！）
+     */
 
     @RequestMapping(value = "films/{searchParam}", method = RequestMethod.GET)
     public ResponseVO films(@PathVariable("searchParam") String searchParam,
                             int searchType) throws ExecutionException, InterruptedException {
 
-        // 根据searchType，判断查询类型
+        // 1 根据searchType，判断查询类型
         FilmDetailVO filmDetail = filmServiceApi.getFilmDetail(searchType, searchParam);
 
         if (filmDetail == null) {

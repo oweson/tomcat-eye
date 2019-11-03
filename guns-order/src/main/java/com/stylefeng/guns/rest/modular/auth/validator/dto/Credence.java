@@ -9,12 +9,12 @@ package com.stylefeng.guns.rest.modular.auth.validator.dto;
 public interface Credence {
 
     /**
-     * 凭据名称
+     * 1 凭据名称
      */
     String getCredenceName();
 
     /**
-     * 密码或者是其他的验证码之类的
+     * 2 密码或者是其他的验证码之类的
      */
     String getCredenceCode();
 }

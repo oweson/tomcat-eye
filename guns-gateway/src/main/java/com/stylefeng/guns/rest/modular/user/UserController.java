@@ -13,9 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user/")
 @RestController
 public class UserController {
-    /*true启动检查开启*/
+    /**
+     * true启动检查开启
+     */
     @Reference(interfaceClass = UserAPI.class, check = false)
     private UserAPI userAPI;
+
+    @RequestMapping("justTest")
+    public Object justTest() {
+        return userAPI.justTest();
+    }
 
     /**
      * 1 注册

@@ -3,7 +3,7 @@ package com.stylefeng.guns.api.alipay;
 import com.stylefeng.guns.api.alipay.vo.AliPayInfoVO;
 import com.stylefeng.guns.api.alipay.vo.AliPayResultVO;
 
-/*
+/**
     业务降级方法
  */
 public class AliPayServiceMock implements AliPayServiceAPI{

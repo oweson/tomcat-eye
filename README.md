@@ -1,3 +1,9 @@
+## 1 启动ZK,zkServer是服务端启动，zkClient是客户端启动  gateway最后启动
+
+## 2 test文件夹，逆向工程，
+
+## 2 
+
 # Guns V4.0
 
 ## 介绍

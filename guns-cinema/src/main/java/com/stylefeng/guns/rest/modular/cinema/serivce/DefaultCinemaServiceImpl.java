@@ -36,11 +36,11 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
      */
     @Override
     public Page<CinemaVO> getCinemas(CinemaQueryVO cinemaQueryVO) {
-        // 业务实体集合
+        // 1 业务实体集合
         List<CinemaVO> cinemas = new ArrayList<>();
 
         Page<MoocCinemaT> page = new Page<>(cinemaQueryVO.getNowPage(), cinemaQueryVO.getPageSize());
-        // 判断是否传入查询条件 -> brandId,distId,hallType 是否==99
+        // 2 判断是否传入查询条件 -> brandId,distId,hallType 是否==99
         EntityWrapper<MoocCinemaT> entityWrapper = new EntityWrapper<>();
         if (cinemaQueryVO.getBrandId() != 99) {
             entityWrapper.eq("brand_id", cinemaQueryVO.getBrandId());

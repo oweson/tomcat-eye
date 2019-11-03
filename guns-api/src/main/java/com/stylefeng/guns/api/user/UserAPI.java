@@ -28,5 +28,7 @@ public interface UserAPI {
      * 5 更新用户信息
      */
     UserInfoModel updateUserInfo(UserInfoModel userInfoModel);
+    /**just test*/
+    Object justTest();
 
 }

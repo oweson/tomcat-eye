@@ -36,7 +36,7 @@ spring:
 ## 注册中心zk,zk也要首先启动
     registry: zookeeper://127.0.0.1:2181
   datasource:
-      url: jdbc:mysql://127.0.0.1:3306/guns?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://127.0.0.1:3306/cateye?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
       password: root
       filters: log4j,wall,mergeStat

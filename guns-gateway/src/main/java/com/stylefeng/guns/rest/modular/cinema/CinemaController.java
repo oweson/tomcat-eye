@@ -43,6 +43,7 @@ public class CinemaController {
             if (cinemas.getRecords() == null || cinemas.getRecords().size() == 0) {
                 return ResponseVO.success("没有影院可查");
             } else {
+                // 第几页，一共多少页码！！！
                 return ResponseVO.success(cinemas.getCurrent(), (int) cinemas.getPages(), "", cinemas.getRecords());
             }
 

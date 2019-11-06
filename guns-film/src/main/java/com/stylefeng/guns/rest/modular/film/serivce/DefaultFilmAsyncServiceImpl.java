@@ -24,7 +24,7 @@ public class DefaultFilmAsyncServiceImpl implements FilmAsyncServiceApi {
 
         MoocFilmInfoT moocFilmInfoT = new MoocFilmInfoT();
         moocFilmInfoT.setFilmId(filmId);
-
+        // 填充信息！
         moocFilmInfoT = moocFilmInfoTMapper.selectOne(moocFilmInfoT);
 
         return moocFilmInfoT;
@@ -65,7 +65,7 @@ public class DefaultFilmAsyncServiceImpl implements FilmAsyncServiceApi {
 
         MoocFilmInfoT moocFilmInfoT = getFilmInfo(filmId);
 
-        // 获取导演编号
+        // 1 获取导演编号，在用户的信息里面
         Integer directId = moocFilmInfoT.getDirectorId();
 
         MoocActorT moocActorT = moocActorTMapper.selectById(directId);

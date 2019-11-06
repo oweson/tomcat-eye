@@ -10,11 +10,12 @@ public interface CinemaServiceAPI {
 
     /**
      * 1、根据CinemaQueryVO，查询影院列表
+     * page:包含总的数量，页码数量，做回传给前端！！！
      */
     Page<CinemaVO> getCinemas(CinemaQueryVO cinemaQueryVO);
 
     /**
-     * 2、根据条件获取品牌列表[除了就99以外，其他的数字为isActive]
+     * 2、根据条件获取品牌列表[除了就99以外，其他的数字为isActive]，告诉前端选择的条件，进行渲染显示
      */
     List<BrandVO> getBrands(int brandId);
 

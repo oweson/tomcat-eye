@@ -236,17 +236,17 @@ public class FilmController {
 
         String filmId = filmDetail.getFilmId();
         // 查询影片的详细信息 -> Dubbo的异步调用
-        // 获取影片描述信息
+        // 1 获取影片描述信息
 //        FilmDescVO filmDescVO = filmAsyncServiceApi.getFilmDesc(filmId);
         filmAsyncServiceApi.getFilmDesc(filmId);
         Future<FilmDescVO> filmDescVOFuture = RpcContext.getContext().getFuture();
-        // 获取图片信息
+        // 2 获取图片信息
         filmAsyncServiceApi.getImgs(filmId);
         Future<ImgVO> imgVOFuture = RpcContext.getContext().getFuture();
-        // 获取导演信息
+        // 3 获取导演信息
         filmAsyncServiceApi.getDectInfo(filmId);
         Future<ActorVO> actorVOFuture = RpcContext.getContext().getFuture();
-        // 获取演员信息
+        // 4 获取演员信息
         filmAsyncServiceApi.getActors(filmId);
         Future<List<ActorVO>> actorsVOFutrue = RpcContext.getContext().getFuture();
 

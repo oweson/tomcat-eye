@@ -52,29 +52,24 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
             // %#3#%
             entityWrapper.like("hall_ids", "%#+" + cinemaQueryVO.getHallType() + "+#%");
         }
-
         // 将数据实体转换为业务实体
         List<MoocCinemaT> moocCinemaTS = moocCinemaTMapper.selectPage(page, entityWrapper);
         for (MoocCinemaT moocCinemaT : moocCinemaTS) {
             CinemaVO cinemaVO = new CinemaVO();
-
             cinemaVO.setUuid(moocCinemaT.getUuid() + "");
             cinemaVO.setMinimumPrice(moocCinemaT.getMinimumPrice() + "");
             cinemaVO.setCinemaName(moocCinemaT.getCinemaName());
             cinemaVO.setAddress(moocCinemaT.getCinemaAddress());
-
             cinemas.add(cinemaVO);
         }
-
         // 根据条件，判断影院列表总数
         long counts = moocCinemaTMapper.selectCount(entityWrapper);
-
         // 组织返回值对象
         Page<CinemaVO> result = new Page<>();
         result.setRecords(cinemas);
         result.setSize(cinemaQueryVO.getPageSize());
         result.setTotal(counts);
-
+        // 可以在前端直接getPages分页以后的数量！！！
         return result;
     }
 
@@ -85,15 +80,15 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
     public List<BrandVO> getBrands(int brandId) {
         boolean flag = false;
         List<BrandVO> brandVOS = new ArrayList<>();
-        // 判断brandId是否存在
+        // 1 判断brandId是否存在
         MoocBrandDictT moocBrandDictT = moocBrandDictTMapper.selectById(brandId);
-        // 判断brandId 是否等于 99
+        // 2 判断brandId 是否等于 99
         if (brandId == 99 || moocBrandDictT == null || moocBrandDictT.getUuid() == null) {
             flag = true;
         }
-        // 查询所有列表
+        // 3 查询所有列表
         List<MoocBrandDictT> moocBrandDictTS = moocBrandDictTMapper.selectList(null);
-        // 判断flag如果为true，则将99置为isActive
+        // 4 判断flag如果为true，则将99置为isActive
         for (MoocBrandDictT brand : moocBrandDictTS) {
             BrandVO brandVO = new BrandVO();
             brandVO.setBrandName(brand.getShowName());

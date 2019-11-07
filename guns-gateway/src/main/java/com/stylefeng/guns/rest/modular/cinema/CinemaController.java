@@ -54,8 +54,8 @@ public class CinemaController {
         }
     }
 
-    // 获取影院的查询条件
-    /*
+    // 2 获取影院的查询条件
+    /**
         1、热点数据 -> 放缓存
         2、banner
      */
@@ -79,13 +79,15 @@ public class CinemaController {
         }
     }
 
-
+    /**
+     * 3 获取场次详细信息接口
+     */
     @RequestMapping(value = "getFields")
     public ResponseVO getFields(Integer cinemaId) {
         try {
-
+            // 1 影院编号,电影院信息
             CinemaInfoVO cinemaInfoById = cinemaServiceAPI.getCinemaInfoById(cinemaId);
-
+           // 2 电影信息
             List<FilmInfoVO> filmInfoByCinemaId = cinemaServiceAPI.getFilmInfoByCinemaId(cinemaId);
 
             CinemaFieldsResponseVO cinemaFieldResponseVO = new CinemaFieldsResponseVO();

@@ -2,6 +2,11 @@
 
 ## 2 test文件夹，逆向工程，
 
+## xml里面的sql返回值可以是VO
+## @slf4j等价 log log=.........!!!
+## lombok记录日志？？ todo
+
+
 ## 2 
 
 # Guns V4.0

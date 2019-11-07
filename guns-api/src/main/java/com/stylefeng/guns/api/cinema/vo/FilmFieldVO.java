@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 放映场次表
+ */
 @Data
 public class FilmFieldVO implements Serializable {
 

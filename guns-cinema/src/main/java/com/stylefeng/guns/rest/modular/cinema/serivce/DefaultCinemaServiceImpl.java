@@ -190,9 +190,9 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
     @Override
     public CinemaInfoVO getCinemaInfoById(int cinemaId) {
 
-        // 数据实体
+        // 1 数据实体
         MoocCinemaT moocCinemaT = moocCinemaTMapper.selectById(cinemaId);
-        // 将数据实体转换成业务实体
+        // 2 将数据实体转换成业务实体
         CinemaInfoVO cinemaInfoVO = new CinemaInfoVO();
         cinemaInfoVO.setCinemaAdress(moocCinemaT.getCinemaAddress());
         cinemaInfoVO.setImgUrl(moocCinemaT.getImgAddress());
@@ -208,9 +208,7 @@ public class DefaultCinemaServiceImpl implements CinemaServiceAPI {
      */
     @Override
     public List<FilmInfoVO> getFilmInfoByCinemaId(int cinemaId) {
-
         List<FilmInfoVO> filmInfos = moocFieldTMapper.getFilmInfos(cinemaId);
-
         return filmInfos;
     }
 

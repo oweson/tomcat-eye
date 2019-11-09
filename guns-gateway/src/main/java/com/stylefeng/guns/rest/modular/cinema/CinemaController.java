@@ -24,6 +24,7 @@ public class CinemaController {
 
     @Reference(interfaceClass = CinemaServiceAPI.class,
             connections = 10, cache = "lru", check = false)
+    // 开启lru本地缓存！！！
     private CinemaServiceAPI cinemaServiceAPI;
 
     @Reference(interfaceClass = OrderServiceAPI.class, check = false)

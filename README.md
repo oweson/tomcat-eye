@@ -5,6 +5,8 @@
 ## xml里面的sql返回值可以是VO
 ## @slf4j等价 log log=.........!!!
 ## lombok记录日志？？ todo
+## 后端开发记住永远不要相信前端传递的东西，
+## ftp:本地可以匿名通过协议访问，程序就需要username和passwd
 
 
 ## 2 

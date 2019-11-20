@@ -29,6 +29,7 @@ public class FTPUtil {
     private void initFTPClient(){
         try{
             ftpClient = new FTPClient();
+            // 可能linux或者win服务器，设置编码
             ftpClient.setControlEncoding("utf-8");
             ftpClient.connect(hostName,port);
             ftpClient.login(userName,password);

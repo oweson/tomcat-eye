@@ -4,6 +4,9 @@ import com.stylefeng.guns.api.film.vo.*;
 
 import java.util.List;
 
+/**
+ * 需要同步的接口
+ */
 public interface FilmAsyncServiceApi {
 
     /**

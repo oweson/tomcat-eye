@@ -24,7 +24,9 @@ public class FilmController {
 
     @Reference(interfaceClass = FilmServiceApi.class, check = false)
     private FilmServiceApi filmServiceApi;
-
+    /**
+     * async=true支持异步调用，不需要资源的同步；
+     */
     @Reference(interfaceClass = FilmAsyncServiceApi.class, async = true, check = false)
     private FilmAsyncServiceApi filmAsyncServiceApi;
 
@@ -240,7 +242,7 @@ public class FilmController {
 //        FilmDescVO filmDescVO = filmAsyncServiceApi.getFilmDesc(filmId);
         filmAsyncServiceApi.getFilmDesc(filmId);
         Future<FilmDescVO> filmDescVOFuture = RpcContext.getContext().getFuture();
-        // 2 获取图片信息
+        // 2 获取图片信息，异步调用！！！节约时间！！！
         filmAsyncServiceApi.getImgs(filmId);
         Future<ImgVO> imgVOFuture = RpcContext.getContext().getFuture();
         // 3 获取导演信息

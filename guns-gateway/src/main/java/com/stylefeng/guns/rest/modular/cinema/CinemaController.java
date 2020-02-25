@@ -55,10 +55,10 @@ public class CinemaController {
         }
     }
 
-    // 2 获取影院的查询条件
     /**
-        1、热点数据 -> 放缓存
-        2、banner
+     * 2 获取影院的查询条件
+     * 1、热点数据 -> 放缓存
+     * 2、banner
      */
     @RequestMapping(value = "getCondition")
     public ResponseVO getCondition(CinemaQueryVO cinemaQueryVO) {
@@ -67,12 +67,10 @@ public class CinemaController {
             List<BrandVO> brands = cinemaServiceAPI.getBrands(cinemaQueryVO.getBrandId());
             List<AreaVO> areas = cinemaServiceAPI.getAreas(cinemaQueryVO.getDistrictId());
             List<HallTypeVO> hallTypes = cinemaServiceAPI.getHallTypes(cinemaQueryVO.getHallType());
-
             CinemaConditionResponseVO cinemaConditionResponseVO = new CinemaConditionResponseVO();
             cinemaConditionResponseVO.setAreaList(areas);
             cinemaConditionResponseVO.setBrandList(brands);
             cinemaConditionResponseVO.setHalltypeList(hallTypes);
-
             return ResponseVO.success(cinemaConditionResponseVO);
         } catch (Exception e) {
             log.error("获取条件列表失败", e);
@@ -88,13 +86,11 @@ public class CinemaController {
         try {
             // 1 影院编号,电影院信息
             CinemaInfoVO cinemaInfoById = cinemaServiceAPI.getCinemaInfoById(cinemaId);
-           // 2 电影信息
+            // 2 电影信息
             List<FilmInfoVO> filmInfoByCinemaId = cinemaServiceAPI.getFilmInfoByCinemaId(cinemaId);
-
             CinemaFieldsResponseVO cinemaFieldResponseVO = new CinemaFieldsResponseVO();
             cinemaFieldResponseVO.setCinemaInfo(cinemaInfoById);
             cinemaFieldResponseVO.setFilmList(filmInfoByCinemaId);
-
             return ResponseVO.success(IMG_PRE, cinemaFieldResponseVO);
         } catch (Exception e) {
             log.error("获取播放场次失败", e);
@@ -105,14 +101,11 @@ public class CinemaController {
     @RequestMapping(value = "getFieldInfo", method = RequestMethod.POST)
     public ResponseVO getFieldInfo(Integer cinemaId, Integer fieldId) {
         try {
-
             CinemaInfoVO cinemaInfoById = cinemaServiceAPI.getCinemaInfoById(cinemaId);
             FilmInfoVO filmInfoByFieldId = cinemaServiceAPI.getFilmInfoByFieldId(fieldId);
             HallInfoVO filmFieldInfo = cinemaServiceAPI.getFilmFieldInfo(fieldId);
-
             // 造几个销售的假数据，后续会对接订单接口
             filmFieldInfo.setSoldSeats(orderServiceAPI.getSoldSeatsByFieldId(fieldId));
-
             CinemaFieldResponseVO cinemaFieldResponseVO = new CinemaFieldResponseVO();
             cinemaFieldResponseVO.setCinemaInfo(cinemaInfoById);
             cinemaFieldResponseVO.setFilmInfo(filmInfoByFieldId);

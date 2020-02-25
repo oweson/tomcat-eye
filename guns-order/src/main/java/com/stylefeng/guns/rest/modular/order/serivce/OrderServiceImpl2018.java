@@ -31,19 +31,21 @@ import java.util.List;
 
 @Slf4j
 @Component
-@Service(interfaceClass = OrderServiceAPI.class,group = "order2018")
+@Service(interfaceClass = OrderServiceAPI.class, group = "order2018")
 public class OrderServiceImpl2018 implements OrderServiceAPI {
 
     @Autowired
     private MoocOrder2018TMapper moocOrder2018TMapper;
 
-    @Reference(interfaceClass = CinemaServiceAPI.class,check = false)
+    @Reference(interfaceClass = CinemaServiceAPI.class, check = false)
     private CinemaServiceAPI cinemaServiceAPI;
 
     @Autowired
     private FTPUtil ftpUtil;
 
-    // 验证是否为真实的座位编号
+    /**
+     * 验证是否为真实的座位编号
+     */
     @Override
     public boolean isTrueSeats(String fieldId, String seats) {
         // 根据FieldId找到对应的座位位置图
@@ -56,23 +58,22 @@ public class OrderServiceImpl2018 implements OrderServiceAPI {
         JSONObject jsonObject = JSONObject.parseObject(fileStrByAddress);
         // seats=1,2,3   ids="1,3,4,5,6,7,88"
         String ids = jsonObject.get("ids").toString();
-
         // 每一次匹配上的，都给isTrue+1
         String[] seatArrs = seats.split(",");
         String[] idArrs = ids.split(",");
         int isTrue = 0;
-        for(String id : idArrs){
-            for(String seat : seatArrs){
-                if(seat.equalsIgnoreCase(id)){
+        for (String id : idArrs) {
+            for (String seat : seatArrs) {
+                if (seat.equalsIgnoreCase(id)) {
                     isTrue++;
                 }
             }
         }
 
         // 如果匹配上的数量与已售座位数一致，则表示全都匹配上了
-        if(seatArrs.length == isTrue){
+        if (seatArrs.length == isTrue) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -82,16 +83,16 @@ public class OrderServiceImpl2018 implements OrderServiceAPI {
     public boolean isNotSoldSeats(String fieldId, String seats) {
 
         EntityWrapper entityWrapper = new EntityWrapper();
-        entityWrapper.eq("field_id",fieldId);
+        entityWrapper.eq("field_id", fieldId);
 
         List<MoocOrder2018T> list = moocOrder2018TMapper.selectList(entityWrapper);
         String[] seatArrs = seats.split(",");
         // 有任何一个编号匹配上，则直接返回失败
-        for(MoocOrder2018T moocOrderT : list){
+        for (MoocOrder2018T moocOrderT : list) {
             String[] ids = moocOrderT.getSeatsIds().split(",");
-            for(String id : ids){
-                for(String seat : seatArrs){
-                    if(id.equalsIgnoreCase(seat)){
+            for (String id : ids) {
+                for (String seat : seatArrs) {
+                    if (id.equalsIgnoreCase(seat)) {
                         return false;
                     }
                 }
@@ -100,27 +101,24 @@ public class OrderServiceImpl2018 implements OrderServiceAPI {
         return true;
     }
 
-    // 创建新的订单
+    /**
+     * 2  创建新的订单
+     */
     @Override
     public OrderVO saveOrderInfo(
             Integer fieldId, String soldSeats, String seatsName, Integer userId) {
-
-        // 编号
+        // 1 编号
         String uuid = UUIDUtil.genUuid();
-
-        // 影片信息
+        // 2 影片信息
         FilmInfoVO filmInfoVO = cinemaServiceAPI.getFilmInfoByFieldId(fieldId);
         Integer filmId = Integer.parseInt(filmInfoVO.getFilmId());
-
         // 获取影院信息
         OrderQueryVO orderQueryVO = cinemaServiceAPI.getOrderNeeds(fieldId);
         Integer cinemaId = Integer.parseInt(orderQueryVO.getCinemaId());
         double filmPrice = Double.parseDouble(orderQueryVO.getFilmPrice());
-
         // 求订单总金额  // 1,2,3,4,5
         int solds = soldSeats.split(",").length;
-        double totalPrice = getTotalPrice(solds,filmPrice);
-
+        double totalPrice = getTotalPrice(solds, filmPrice);
         MoocOrder2018T moocOrderT = new MoocOrder2018T();
         moocOrderT.setUuid(uuid);
         moocOrderT.setSeatsName(seatsName);
@@ -131,25 +129,24 @@ public class OrderServiceImpl2018 implements OrderServiceAPI {
         moocOrderT.setFilmId(filmId);
         moocOrderT.setFieldId(fieldId);
         moocOrderT.setCinemaId(cinemaId);
-
         Integer insert = moocOrder2018TMapper.insert(moocOrderT);
-        if(insert>0){
+        if (insert > 0) {
             // 返回查询结果
             OrderVO orderVO = moocOrder2018TMapper.getOrderInfoById(uuid);
-            if(orderVO == null || orderVO.getOrderId() == null){
-                log.error("订单信息查询失败,订单编号为{}",uuid);
+            if (orderVO == null || orderVO.getOrderId() == null) {
+                log.error("订单信息查询失败,订单编号为{}", uuid);
                 return null;
-            }else {
+            } else {
                 return orderVO;
             }
-        }else{
+        } else {
             // 插入出错
             log.error("订单插入失败");
             return null;
         }
     }
 
-    private static double getTotalPrice(int solds,double filmPrice){
+    private static double getTotalPrice(int solds, double filmPrice) {
         BigDecimal soldsDeci = new BigDecimal(solds);
         BigDecimal filmPriceDeci = new BigDecimal(filmPrice);
 
@@ -161,23 +158,25 @@ public class OrderServiceImpl2018 implements OrderServiceAPI {
         return bigDecimal.doubleValue();
     }
 
-
+    /**
+     * 根据用户的id查询订单信息
+     */
     @Override
-    public Page<OrderVO> getOrderByUserId(Integer userId,Page<OrderVO> page) {
+    public Page<OrderVO> getOrderByUserId(Integer userId, Page<OrderVO> page) {
         Page<OrderVO> result = new Page<>();
-        if(userId == null){
+        if (userId == null) {
             log.error("订单查询业务失败，用户编号未传入");
             return null;
-        }else{
-            List<OrderVO> ordersByUserId = moocOrder2018TMapper.getOrdersByUserId(userId,page);
-            if(ordersByUserId==null && ordersByUserId.size()==0){
+        } else {
+            List<OrderVO> ordersByUserId = moocOrder2018TMapper.getOrdersByUserId(userId, page);
+            if (ordersByUserId == null && ordersByUserId.size() == 0) {
                 result.setTotal(0);
                 result.setRecords(new ArrayList<>());
                 return result;
-            }else{
+            } else {
                 // 获取订单总数
                 EntityWrapper<MoocOrder2018T> entityWrapper = new EntityWrapper<>();
-                entityWrapper.eq("order_user",userId);
+                entityWrapper.eq("order_user", userId);
                 Integer counts = moocOrder2018TMapper.selectCount(entityWrapper);
                 // 将结果放入Page
                 result.setTotal(counts);
@@ -189,29 +188,28 @@ public class OrderServiceImpl2018 implements OrderServiceAPI {
     }
 
     // 根据放映查询，获取所有的已售座位
-    /*
 
-        1  1,2,3,4
-        1  5,6,7
-
+    /**
+     * 1  1,2,3,4
+     * 1  5,6,7
      */
     @Override
     public String getSoldSeatsByFieldId(Integer fieldId) {
-        if(fieldId == null){
+        if (fieldId == null) {
             log.error("查询已售座位错误，未传入任何场次编号");
             return "";
-        }else{
-            String soldSeatsByFieldId = moocOrder2018TMapper.getSoldSeatsByFieldId(fieldId);
-            return soldSeatsByFieldId;
+        } else {
+            return moocOrder2018TMapper.getSoldSeatsByFieldId(fieldId);
         }
     }
 
+    /**
+     * 查看单个的订单信息
+     */
     @Override
     public OrderVO getOrderInfoById(String orderId) {
 
-        OrderVO orderInfoById = moocOrder2018TMapper.getOrderInfoById(orderId);
-
-        return orderInfoById;
+        return moocOrder2018TMapper.getOrderInfoById(orderId);
     }
 
     @Override
@@ -224,11 +222,7 @@ public class OrderServiceImpl2018 implements OrderServiceAPI {
         moocOrderT.setUuid(orderId);
         moocOrderT.setOrderStatus(1);
         Integer integer = moocOrder2018TMapper.updateById(moocOrderT);
-        if(integer>=1){
-            return true;
-        }else{
-            return false;
-        }
+        return integer >= 1;
     }
 
     @Override
@@ -236,11 +230,10 @@ public class OrderServiceImpl2018 implements OrderServiceAPI {
         MoocOrder2018T moocOrderT = new MoocOrder2018T();
         moocOrderT.setUuid(orderId);
         moocOrderT.setOrderStatus(2);
-
         Integer integer = moocOrder2018TMapper.updateById(moocOrderT);
-        if(integer>=1){
+        if (integer >= 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

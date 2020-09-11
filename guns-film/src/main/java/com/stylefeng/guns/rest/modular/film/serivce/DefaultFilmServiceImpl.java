@@ -167,7 +167,6 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
     public FilmVO getSoonFilms(boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId) {
         FilmVO filmVO = new FilmVO();
         List<FilmInfo> filmInfos = new ArrayList<>();
-
         // 1 即将上映影片的限制条件
         EntityWrapper<MoocFilmT> entityWrapper = new EntityWrapper<>();
         // 参数 2
@@ -225,7 +224,6 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
             // 每页10条，我现在有6条 -> 1
             int totalCounts = moocFilmTMapper.selectCount(entityWrapper);
             int totalPages = (totalCounts / nums) + 1;
-
             filmVO.setFilmInfo(filmInfos);
             filmVO.setTotalPage(totalPages);
             filmVO.setNowPage(nowPage);
@@ -291,7 +289,6 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         filmVO.setFilmInfo(filmInfos);
         filmVO.setTotalPage(totalPages);
         filmVO.setNowPage(nowPage);
-
         return filmVO;
     }
 

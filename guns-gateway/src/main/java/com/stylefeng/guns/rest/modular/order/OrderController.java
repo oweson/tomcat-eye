@@ -111,28 +111,21 @@ public class OrderController {
             @RequestParam(name = "nowPage", required = false, defaultValue = "1") Integer nowPage,
             @RequestParam(name = "pageSize", required = false, defaultValue = "5") Integer pageSize
     ) {
-
         // 获取当前登陆人的信息
         String userId = CurrentUser.getCurrentUser();
-
         // 使用当前登陆人获取已经购买的订单
         Page<OrderVO> page = new Page<>(nowPage, pageSize);
         if (userId != null && userId.trim().length() > 0) {
             Page<OrderVO> result = orderServiceAPI.getOrderByUserId(Integer.parseInt(userId), page);
-
             Page<OrderVO> result2017 = orderServiceAPI2017.getOrderByUserId(Integer.parseInt(userId), page);
-
             log.error(result2017.getRecords() + " , " + result.getRecords());
-
             // 合并结果
             int totalPages = (int) (result.getPages() + result2017.getPages());
             // 2017和2018的订单总数合并
             List<OrderVO> orderVOList = new ArrayList<>();
             orderVOList.addAll(result.getRecords());
             orderVOList.addAll(result2017.getRecords());
-
             return ResponseVO.success(nowPage, totalPages, "", orderVOList);
-
         } else {
             return ResponseVO.serviceFail("用户未登陆");
         }
